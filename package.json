@@ -35,7 +35,8 @@
   "homepage": "https://github.com/demimonde/demimonde.app#readme",
   "devDependencies": {
     "alamode": "1.6.1",
-    "eslint-config-artdeco": "1.0.1"
+    "eslint-config-artdeco": "1.0.1",
+    "rqt": "3.0.1"
   },
   "dependencies": {
     "@idio/core": "1.0.2"
