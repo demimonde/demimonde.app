@@ -5,6 +5,7 @@ COPY yarn.lock .
 RUN yarn
 
 COPY build build
+COPY static static
 
 ENV NODE_ENV production
 
