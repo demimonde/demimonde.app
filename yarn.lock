@@ -24,6 +24,20 @@
   resolved "https://registry.yarnpkg.com/@artdeco/clean-stack/-/clean-stack-1.0.0.tgz#36ff9c9f66e6cb1eb0bfa90341be21cba70c7ea6"
   integrity sha512-lNrvCAG7xU8z2srq7XSbyDECGEjhXiXlP3CbQ4G0OSTckUBnu7yY7zUcpDK5x1CxyWvDKb3qsUkKKgK703GBeA==
 
+"@demimonde/graph@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@demimonde/graph/-/graph-1.0.0.tgz#dc31816cd029e33af4177963ddd5ec51951cf001"
+  integrity sha512-gJ3IMf6Z0NS/QDZ0maw5mQbYiPN88i/fS8iE3XjI5O6wqVgR8KYfOqmKAavPbeN46GnpZjNvdOSal1r5oxNOsg==
+  dependencies:
+    rqt "3.0.1"
+
+"@demimonde/graph@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@demimonde/graph/-/graph-1.0.2.tgz#8e66abe0ccf68d106b62250a0b63954679efb88b"
+  integrity sha512-KgTrgPWQUbKM8ZCe9EK+dmorbgdqNfJ6CAxoI/iepeGZojkZwJ2OCXN2gYeOsB4Z7g6HRXil/FCwZv0WWlc/cg==
+  dependencies:
+    rqt "3.0.1"
+
 "@idio/core@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@idio/core/-/core-1.0.2.tgz#48cef11c202fd5c0b4b4f39d9c9636aa23ae5a2d"
@@ -45,6 +59,13 @@
     koa-session "5.9.0"
     koa-static "5.0.0"
     server-destroy "1.0.1"
+
+"@idio/facebook@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@idio/facebook/-/facebook-1.0.0.tgz#e98319e56f914b41d0ac74d09b3d5d48f8ef8ea3"
+  integrity sha512-49CY4TPpBIFzuOFPWfWsrg7Qjfrg2mdxMn4szYre3qWp/zcV3ctlG86gz0Kh+q4VYauBVWHaxFeM0kU0db8azw==
+  dependencies:
+    "@demimonde/graph" "1.0.2"
 
 "@rqt/aqt@1.1.3":
   version "1.1.3"

@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Instagram",
+      "program": "${workspaceFolder}/instagram/index.js",
+      "args": [
+        "instagram/install.js"
+      ],
+      "env": {
+        "SECRET": "8ffd49b2aa6588e3f53d0c9660ef8ca4"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**/*.js"
+      ]
+    }
+  ]
+}

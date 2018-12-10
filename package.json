@@ -14,6 +14,7 @@
     "doc": "NODE_DEBUG=doc doc documentary -o README.md",
     "build": "alamode src -o build -s -i bin/index.js",
     "dev": "node src/bin",
+    "insta": "node instagram instagram/install",
     "dokku": "git push dokku"
   },
   "files": [
@@ -39,6 +40,8 @@
     "rqt": "3.0.1"
   },
   "dependencies": {
-    "@idio/core": "1.0.2"
+    "@demimonde/graph": "1.0.0",
+    "@idio/core": "1.0.2",
+    "@idio/facebook": "1.0.0"
   }
 }
