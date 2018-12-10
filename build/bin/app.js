@@ -19,17 +19,21 @@ const getHello = (user) => {
     session: { use: true, keys: [process.env.SESSION_KEY || 'dev'] },
     logger: { use: process.env != 'production' },
     bodyparser: {},
+    static: { use: true, root: 'static' },
   }, { port: process.env.PORT || 5000 })
   router.get('/', async (ctx) => {
     const user = ctx.session.user
     const u = getHello(user)
-    const l = user ? '' : '<a href="/auth/facebook">Log In</a>'
+    const l = user ? '<a href="/signout">Sing out</a>' : '<a href="/auth/facebook"><img src="fb.png"></a>'
     ctx.body = `
 <!doctype HTML>
 <html>
 ${u} ${l}
+<p>
+Demimonde allows to publish media on Instagram from online.
+</p>
   <ul>
-  <li><a href="/list">Pages</a></li>
+${user ? '<li><a href="/list">Pages</a></li>' : ''}
   <li><a href="/privacy">Privacy Policy</a></li>
 ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
   </ul>
