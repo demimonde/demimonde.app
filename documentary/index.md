@@ -1,5 +1,9 @@
-# @demimonde/demimonde.app
+# @demimonde/demimondeApp
 
-`@demimonde/demimonde.app`: The app where people can sell their Instagram photographs by tagging the Demimonde user.
+`@demimonde/demimondeApp`: The app where people can sell their Instagram photographs by tagging the Demimonde user.
+
+%~%
 
 %TOC%
+
+%~%
