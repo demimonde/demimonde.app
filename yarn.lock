@@ -1250,6 +1250,11 @@ koa@2.5.3:
     type-is "^1.6.16"
     vary "^1.1.2"
 
+linear-partitioning@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/linear-partitioning/-/linear-partitioning-0.3.2.tgz#9b3e46a453d757fa4e68cba674af0edca1b79e9f"
+  integrity sha1-mz5GpFPXV/pOaMumdK8O3KG3np8=
+
 makepromise@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/makepromise/-/makepromise-1.0.0.tgz#bc6bb6a3e06fd706df51c2923b6936fabd70aa7f"
@@ -1507,6 +1512,13 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
+
+photo-partition@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/photo-partition/-/photo-partition-0.1.4.tgz#3787a841cbab11efc4b59cfaedd9153ba948d4b8"
+  integrity sha512-HB0iQ8lLYXYz7yujtY3N46qXjpqUvsrVdeYgHHYZ9smRi8NWP1vmR9F0gNlFkLLyEgvsaDYavX4imzxfS6VFjg==
+  dependencies:
+    linear-partitioning "0.3.2"
 
 pirates@4.0.0:
   version "4.0.0"

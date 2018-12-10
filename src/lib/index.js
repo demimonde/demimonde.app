@@ -74,11 +74,11 @@ export const createRecord = async (table, partition, data, key = uuid()) => {
   })
 }
 
-export const getPhotos = async (userId) => {
+export const getPhotos = async (userId, page = 1) => {
   const tbl = createTableService()
   var query = new TableQuery()
     .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
-    .top(5)
+    .top(20 * page)
     .where('PartitionKey eq ?', userId)
   const res = await new Promise((r, j) => {
     tbl.queryEntities('photos', query, null, (error, result) => {

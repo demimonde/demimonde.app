@@ -11,7 +11,7 @@ const temp = ({ data, title = 'Demimonde.app', user, script = () => {} }) => {
 </head>
 <body>
   ${getHello(user)}
-  <a href="/signout">Sign Out</a>
+  ${user ? '<a href="/signout">Sign out</a> <a href="/upload">Upload</a>' : '<a href="/auth/facebook"><img src="/fb.png"></a>'}
   ${data}
 </body>
 <script>
