@@ -10,3 +10,5 @@ COPY static static
 ENV NODE_ENV production
 
 ENTRYPOINT ["node", "build/bin/app.js"]
+
+RUN apk add --update perl && rm -rf /var/cache/apk/*
