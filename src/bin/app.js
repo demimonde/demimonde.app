@@ -5,7 +5,7 @@ import { getPhotos } from '../lib'
 import temp from './temp'
 import uploadPost from '../routes/post/upload'
 import { ExiftoolProcess } from 'node-exiftool'
-const exiftoolBin = require('exiftool.pl')
+import exiftoolBin from 'dist-exiftool'
 
 async function startExiftool() {
   const ep = new ExiftoolProcess(exiftoolBin)

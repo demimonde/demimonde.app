@@ -46,7 +46,7 @@
     "@idio/facebook": "1.0.0",
     "@wrote/rm": "1.1.0",
     "azure-storage": "2.10.2",
-    "exiftool.pl": "10.53.0",
+    "dist-exiftool": "10.53.0",
     "node-exiftool": "2.3.0",
     "sharp": "0.21.1",
     "uuid": "3.3.2"
