@@ -1,12 +1,11 @@
 # @demimonde/demimonde.app
 
-%NPM: @demimonde/demimonde.app%
-
 `@demimonde/demimonde.app`: The app where people can sell their Instagram photographs by tagging the Demimonde user.
 
 * [deploy on a Dokku](#deploy-on-a-dokku)
 - [@idio/facebook](#idiofacebook)
 - [Copyright](#copyright)
+
 
 ## Dokku Deploy
 
