@@ -55,6 +55,7 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
     scope: 'manage_pages,instagram_basic',
   })
   router.get('/list', checkToken, list)
+  router.get('/media', checkToken, media)
   app.use(router.routes())
   console.log('Started on %s', url)
 })()
@@ -66,38 +67,45 @@ const list = async (ctx) => {
   await Promise.all(pages.map(async (page) => {
     const { access_token, id } = page
     const d = await graphGet(id, access_token, {
-      fields: 'subscribed_apps,instagram_accounts,page_backed_instagram_accounts',
+      fields: 'subscribed_apps,instagram_accounts,page_backed_instagram_accounts,instagram_business_account',
     }, 1)
     const {
       subscribed_apps: { data: subscribed_apps } = { data: [] },
       instagram_accounts: { data: instagram_accounts } = { data: [] },
-      page_backed_instagram_accounts: { data: page_backed_instagram_accounts = [] } = { data: [] } } = d
+      page_backed_instagram_accounts: { data: page_backed_instagram_accounts = [] } = { data: [] },
+      instagram_business_account: { id: instagram_business } = {} } = d
     const accs = [...instagram_accounts, ...page_backed_instagram_accounts]
     await Promise.all(accs.map(async (acc) => {
       const { id: accId } = acc
       const dd = await graphGet(accId, access_token, {
         fields: 'id,profile_pic,username',
       }, 1)
+      if (dd.error) {
+        throw new Error(dd.error.message)
+      }
       Object.assign(acc, dd)
     }))
     Object.assign(page, {
       subscribed_apps,
       instagram_accounts,
       page_backed_instagram_accounts,
+      instagram_business,
     })
     return page
   }))
   const html = pages.map(({
     instagram_accounts, page_backed_instagram_accounts,
-    access_token, name, id, subscribed_apps,
+    access_token, name, id, subscribed_apps, instagram_business,
   }) => {
     return `<div><h2><a href="https://facebook.com/${id}">${name}</a></h2>
-    ${instagram_accounts.length ? '<h3>Instagram Business Accounts</h3>' : ''}
-    ${instagram_accounts.map(({ profile_pic, username }) => {
+    ${instagram_business ? `
+    <a href="/media?id=${instagram_business}">Media</a>` : ''}
+    ${instagram_accounts.length ? '<h3>Instagram Linked Accounts</h3>' : ''}
+    ${instagram_accounts.map(({ profile_pic, username, id }) => {
     return `<img src="${profile_pic}" width="50">${username}`
   })}
     ${page_backed_instagram_accounts.length ? '<h3>Page Backed Accounts</h3>' : ''}
-      ${page_backed_instagram_accounts.map(({ profile_pic, username }) => {
+      ${page_backed_instagram_accounts.map(({ profile_pic, username, id }) => {
     return `<img src="${profile_pic}" width="50">${username}`
   })}
       ${subscribed_apps.length ? '<h3>Subscribed Apps</h3>' : ''}
@@ -126,6 +134,47 @@ const list = async (ctx) => {
       })
     },
   })
+}
+
+const media = async (ctx) => {
+  const { token } = ctx.session
+  const { id } = ctx.query
+
+  const med = await graphGet(`${id}/media`, token, {
+    fields: 'caption,media_url,media_type,like_count,permalink',
+  })
+  // mutate with accounts and apps
+  // <h1>Media for <a href="https://facebook.com/${id}">${id}</a></h1>
+  const html = med.map(({
+    caption, media_url, media_type, like_count, permalink,
+  }) => {
+    return `<div>
+  ${caption} ${media_url} ${media_type}
+    </div>`
+  }).join(' ')
+  ctx.body = temp({
+    user: ctx.session.user,
+    data: html,
+    title: 'Media',
+  })
+  // ctx.body = temp({
+  //   user: ctx.session.user,
+  //   data: `<h1>Pages</h1>${html}`,
+  //   script() {
+  //     document.querySelectorAll('.subscribe').forEach(el => {
+  //       el.onclick = async () => {
+  //         const t = el.getAttribute('data-token')
+  //         const p = el.getAttribute('data-page')
+  //         const res = await fetch(`/subscribe?page=${p}&token=${t}`, {
+  //           method: 'POST',
+  //         })
+  //         const j = await res.json()
+  //         console.log(j)
+  //         return false
+  //       }
+  //     })
+  //   },
+  // })
 }
 
 const temp = ({ data, title = 'Demimonde.app', user, script = () => {} }) => {
