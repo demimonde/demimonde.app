@@ -41,7 +41,7 @@
     "rqt": "3.0.1"
   },
   "dependencies": {
-    "@demimonde/graph": "1.0.0",
+    "@demimonde/graph": "1.0.2",
     "@idio/core": "1.0.2",
     "@idio/facebook": "1.0.0"
   }

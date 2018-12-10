@@ -2,9 +2,15 @@
 
 `@demimonde/demimonde.app`: The app where people can sell their Instagram photographs by tagging the Demimonde user.
 
-* [deploy on a Dokku](#deploy-on-a-dokku)
+- [The Instagram Business Page](#the-instagram-business-page)
+  * [deploy on a Dokku](#deploy-on-a-dokku)
 - [@idio/facebook](#idiofacebook)
 - [Copyright](#copyright)
+
+## The Instagram Business Page
+
+The app can authenticate the business account that is connected to one of the user's pages. The `manage_pages` permission is required, as well as `instagram_basic` to work with instagram (no page access tokens).
+
 
 
 ## Dokku Deploy
@@ -23,6 +29,8 @@ dokku config:set --no-restart demimonde.app DOKKU_LETSENCRYPT_EMAIL=ssh@adc.sh
 # deploy from git
 dokku letsencrypt demimonde.app
 ```
+
+<p align="center"><a href="#table-of-contents"><img src=".documentary/section-breaks/0.svg?sanitize=true"></a></p>
 
 ## @idio/facebook
 
