@@ -146,10 +146,11 @@ const media = async (ctx) => {
   // mutate with accounts and apps
   // <h1>Media for <a href="https://facebook.com/${id}">${id}</a></h1>
   const html = med.map(({
-    caption, media_url, media_type, like_count, permalink,
+    caption = '', media_url, media_type, like_count, permalink,
   }) => {
-    return `<div>
-  ${caption} ${media_url} ${media_type}
+    return `<div style="display:block;">
+  <a href="${permalink}"><img src="${media_url}" width="250"></a><br>
+  ${caption}
     </div>`
   }).join(' ')
   ctx.body = temp({
