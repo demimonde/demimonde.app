@@ -19,6 +19,19 @@
       "skipFiles": [
         "<node_internals>/**/*.js"
       ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch App",
+      "program": "${workspaceFolder}/src/bin/index.js",
+      "env": {
+        "SECRET": "8ffd49b2aa6588e3f53d0c9660ef8ca4"
+      },
+      "console": "integratedTerminal",
+      "skipFiles": [
+        "<node_internals>/**/*.js"
+      ]
     }
   ]
 }
