@@ -9,4 +9,4 @@ CONTAINER=container
 SECRET=facebook-secret
 ```
 
-It will only be available when running the app via `src/bin` and not the `build` directory.
+It is available when running the app both via `src/bin` and via `build/bin` directories, however the production entry is `build/bin/app.js`.

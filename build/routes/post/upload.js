@@ -24,7 +24,7 @@ module.exports=async (ctx) => {
       container, blob, contentType: mimetype,
     }),
     (async () => {
-      const ff = await sharp(path).resize(500).toBuffer()
+      const ff = await sharp(path).rotate().resize(500).toBuffer()
       const thumbBlob = `thumb/${uuid()}.jpg`
       const thumb_url = await file({
         storage,
@@ -35,11 +35,19 @@ module.exports=async (ctx) => {
     })(),
   ])
   await rm(path)
+  const { Orientation = 1 } = metadata
   await createRecord('photos', id, {
     ImageUrl: { _: imageUrl },
     ThumbUrl: { _: thumbUrl },
-    ImageWidth: { _: metadata.ImageWidth },
-    ImageHeight: { _: metadata.ImageHeight },
-  })
+    ImageWidth: { _: Orientation < 5 ? metadata.ImageWidth : metadata.ImageHeight },
+    ImageHeight: { _: Orientation < 5 ? metadata.ImageHeight : metadata.ImageWidth },
+  }, pad())
   ctx.body = thumbUrl
+}
+
+const pad = () => {
+  const s = `${8640000000000000 - Date.now()}`
+  const l = Math.max(19 - s.length, 0)
+  const t = '0'.repeat(l)
+  return `${t}${s}`
 }

@@ -12,7 +12,7 @@
     "start": "node build/bin/app",
     "lint": "eslint .",
     "doc": "NODE_DEBUG=doc doc documentary -o README.md",
-    "build": "alamode src -o build -s -i bin/index.js",
+    "build": "alamode src -o build -s",
     "dev": "node src/bin",
     "insta": "node instagram instagram/install",
     "dokku": "git push dokku"
