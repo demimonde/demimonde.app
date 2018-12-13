@@ -9,7 +9,7 @@ module.exports=async (ctx) => {
   <ul>
     ${albums.map(({ Name, RowKey }) => {
     return `<li><a href="/album/${RowKey._}">${Name._}</a></li>`
-  })}
+  }).join('')}
   <ul>
 <a href="/add-album">Add Album</a>
 `

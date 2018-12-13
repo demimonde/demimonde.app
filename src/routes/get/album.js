@@ -57,7 +57,7 @@ async function getAlbum(ctx) {
 `
   ctx.body = temp({
     data,
-    title: 404,
+    title: `Album ${album.Name._}`,
     user: ctx.session.user,
   })
 }

@@ -35,7 +35,7 @@ const getHello = (user) => {
     session: { use: true, keys: [process.env.SESSION_KEY || 'dev'] },
     logger: { use: process.env != 'production' },
     bodyparser: {},
-    static: { use: true, root: 'static' },
+    static: { use: true, root: 'static', maxage: process.env.NODE_ENV == 'production' ? 60 * 60 * 24 * 1000 : undefined },
     multer: { config: {
       dest: 'upload',
     } },

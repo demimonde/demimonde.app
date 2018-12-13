@@ -8,6 +8,8 @@ const temp = ({ data, title = 'Demimonde.app', user, script = () => {} }) => {
 <html>
 <head>
   <title>${title}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png">
 </head>
 <body>
   <a href="/"><img src="/logo.png"></a><br>
