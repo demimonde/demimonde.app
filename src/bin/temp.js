@@ -13,7 +13,7 @@ const temp = ({ data, title = 'Demimonde.app', user, script = () => {} }) => {
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png">
 </head>
 <body>
-  <a href="/"><img src="/logo.png"></a><br>
+  <a href="/"><img src="/logo.svg"></a><br>
   ${getHello(user)}
   ${user ? '<a href="/signout">Sign out</a> <a href="/upload">Upload</a>' : '<a href="/auth/facebook"><img src="/fb.png"></a>'}
   ${data}
