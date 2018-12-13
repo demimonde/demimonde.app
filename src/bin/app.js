@@ -63,6 +63,7 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
   })
   router.get('/upload', checkToken, csrf, async (ctx) => {
     const user = ctx.session.user
+    // action="http://localhost:7071/api/HttpTrigger"
     const data = `
 <form method="post" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="${ctx.csrf}">
@@ -109,16 +110,18 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
     const css = getCSS(pp)
     const data = `<style>
 img.preview {
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 div.preview-div {
-  float: left;
-  padding: 0.1em;
+  display: inline-block;
+}
+.Container {
+  text-align: center;
 }
 ${css}
 </style>
-<div>
+<div class="Container">
 ${outputList.map(({ class: cl, url }) => `  <div class="preview-div ${cl}"><img class="preview" src="${url}"/></div>` ).join('')}
 </div>
 `
