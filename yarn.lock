@@ -24,6 +24,11 @@
   resolved "https://registry.yarnpkg.com/@artdeco/clean-stack/-/clean-stack-1.0.0.tgz#36ff9c9f66e6cb1eb0bfa90341be21cba70c7ea6"
   integrity sha512-lNrvCAG7xU8z2srq7XSbyDECGEjhXiXlP3CbQ4G0OSTckUBnu7yY7zUcpDK5x1CxyWvDKb3qsUkKKgK703GBeA==
 
+"@demimonde/dotenv@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@demimonde/dotenv/-/dotenv-1.0.0.tgz#73d745a6189011a1493761d2f68833436d7e69ca"
+  integrity sha512-cUC9gtaGpvv6BM1BoT6cUaOfL50J9rPK8vGjLdWbJUSdx+XQNY0uXXK4oJ6ILmIfYjgcj1LfJLL7fPw0JOzI7A==
+
 "@demimonde/graph@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@demimonde/graph/-/graph-1.0.2.tgz#8e66abe0ccf68d106b62250a0b63954679efb88b"
