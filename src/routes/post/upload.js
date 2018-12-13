@@ -10,7 +10,7 @@ export default async (ctx) => {
   const { storage, container } = ctx
   if (!storage) throw new Error('Set STORAGE env variable.')
   if (!container) throw new Error('Set CONTAINER env variable.')
-  const { id } = ctx.req.body
+  const { id, album } = ctx.req.body
   if (!id) throw new Error('No user id.')
   if (!ctx.req.file) throw new Error('No file')
   const { path, mimetype } = ctx.req.file

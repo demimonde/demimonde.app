@@ -12,9 +12,6 @@
       "args": [
         "instagram/install.js"
       ],
-      "env": {
-        "SECRET": "8ffd49b2aa6588e3f53d0c9660ef8ca4"
-      },
       "console": "integratedTerminal",
       "skipFiles": [
         "<node_internals>/**/*.js"
@@ -25,9 +22,6 @@
       "request": "launch",
       "name": "Launch App",
       "program": "${workspaceFolder}/src/bin/index.js",
-      "env": {
-        "SECRET": "909758b0a50b6aec501fc7de603300fb"
-      },
       "console": "integratedTerminal",
       "skipFiles": [
         "<node_internals>/**/*.js"

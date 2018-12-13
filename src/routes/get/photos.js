@@ -3,9 +3,10 @@ import { getPhotos } from '../../lib'
 import temp from '../../bin/temp'
 
 async function getPhotosRoute(ctx) {
-  if (!ctx.params.user) throw new Error('no user')
+  const user = ctx.session.user.id
+  if (!user) throw new Error('no user id')
   const page = ctx.params.page ? parseInt(ctx.params.page) : 0
-  const { entries } = await getPhotos(ctx.params.user, page)
+  const { entries } = await getPhotos(user, page)
   const newList = entries.map((r) => {
     const aspect = r.ImageWidth._ / r.ImageHeight._
     return {

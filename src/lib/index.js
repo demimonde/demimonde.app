@@ -1,5 +1,6 @@
 import { createBlobService, createTableService, TableQuery } from 'azure-storage'
 import uuid from 'uuid/v4'
+import { queryTable, ensureTable, insert } from './query'
 
 const getUrl = (storage, container, blob) => {
   return [
@@ -52,33 +53,27 @@ export const file = async ({
 }
 
 export const createRecord = async (
-  table, partition, data, key = uuid(),
+  {
+    table,
+    partition,
+    data,
+    key = uuid(),
+    tbl = createTableService(),
+  }
 ) => {
-  const tbl = createTableService()
-  const photo = {
+  const allData = {
     PartitionKey: { _: partition },
     RowKey: { _: key },
     ...data,
   }
-  await new Promise((r, j) => {
-    tbl.createTableIfNotExists(table, function(error, result) {
-      if(!error) {
-        r(result)
-      } else j(error)
-    })
-  })
-  await new Promise((r, j) => {
-    tbl.insertEntity(table, photo, function (error, result, rr) {
-      if(!error){
-        r(rr)
-      } else j(error)
-    })
-  })
+  await ensureTable(tbl, table)
+  await insert(tbl, table, allData)
+  return key
 }
 
 export const getPhotos = async (userId, page = 1) => {
   const tbl = createTableService()
-  var query = new TableQuery()
+  const query = new TableQuery()
     .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
     .top(20 * page)
     .where('PartitionKey eq ?', userId)
@@ -91,3 +86,33 @@ export const getPhotos = async (userId, page = 1) => {
   })
   return res
 }
+
+export const getAlbums = async (tbl, userId) => {
+  const query = new TableQuery()
+    .where('PartitionKey eq ?', userId)
+  await queryTable(tbl, 'albums', query)
+}
+
+export const postAlbums = async (tbl, userId, { name }) => {
+  if (!name) throw new Error('no name')
+  const res = await createRecord({
+    table: 'albums',
+    partition: userId,
+    tbl,
+    data: {
+      Name: { _: name },
+    },
+  })
+  return res
+}
+
+// export const query = async ({
+//   tableService = createTableService(),
+//   fields = [],
+//   partitionKey,
+// }) => {
+//   /** @type {} */
+//   const query = new TableQuery()
+//     .select(fields)
+//     .where('PartitionKey eq ?', partitionKey)
+// }
