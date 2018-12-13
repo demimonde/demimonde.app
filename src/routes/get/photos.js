@@ -3,10 +3,9 @@ import { getPhotos } from '../../lib'
 import temp from '../../bin/temp'
 
 async function getPhotosRoute(ctx) {
-  const user = ctx.session.user.id
-  if (!user) throw new Error('no user id')
-  const page = ctx.params.page ? parseInt(ctx.params.page) : 0
-  const { entries } = await getPhotos(user, page)
+  const { id } = ctx.session.user
+  const page = ctx.params.page ? parseInt(ctx.params.page) : 1
+  const entries = await getPhotos(ctx.tableService, id, page)
   const newList = entries.map((r) => {
     const aspect = r.ImageWidth._ / r.ImageHeight._
     return {

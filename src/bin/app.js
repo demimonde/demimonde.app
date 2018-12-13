@@ -9,6 +9,7 @@ import getPhotos from '../routes/get/photos'
 import getUploadRoute from '../routes/get/upload'
 import { createTableService } from 'azure-storage'
 import getAlbums from '../routes/get/albums'
+import getAlbum from '../routes/get/album'
 import getAddAlbum from '../routes/get/add-album'
 import postAddAlbum from '../routes/post/add-album'
 
@@ -74,6 +75,7 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
   })
   router.get('/add-album', checkauth, csrf, getAddAlbum)
   router.post('/add-album', checkauth, bodyparser, csrf, postAddAlbum)
+  router.get('/album/:albumId', checkauth, csrf, getAlbum)
   router.get('/albums', checkauth, csrf, getAlbums)
   router.get('/upload', checkauth, csrf, getUploadRoute)
   router.post('/upload', checkauth, multer.single('file'), async (ctx, next) => {

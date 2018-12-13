@@ -71,26 +71,35 @@ export const createRecord = async (
   return key
 }
 
-export const getPhotos = async (userId, page = 1) => {
-  const tbl = createTableService()
+export const getPhotos = async (tbl, userId, page = 1) => {
   const query = new TableQuery()
     .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
-    .top(20 * page)
+    .top(20 * (page - 1))
     .where('PartitionKey eq ?', userId)
-  const res = await new Promise((r, j) => {
-    tbl.queryEntities('photos', query, null, (error, result) => {
-      if(!error) {
-        r(result)
-      } else j(error)
-    })
-  })
-  return res
+  const entries = await queryTable(tbl, 'photos', query)
+  return entries
+}
+
+export const getAlbumPhotos = async (tbl, album, userId, page = 1) => {
+  const query = new TableQuery()
+    .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
+    .top(20 * (page - 1))
+    .where('AlbumId eq ? && PartitionKey eq ?', album, userId)
+  const entries = await queryTable(tbl, 'photos', query)
+  return entries
 }
 
 export const getAlbums = async (tbl, userId) => {
   const query = new TableQuery()
     .where('PartitionKey eq ?', userId)
-  await queryTable(tbl, 'albums', query)
+  return await queryTable(tbl, 'albums', query)
+}
+
+export const queryAlbum = async (tbl, userId, id) => {
+  const query = new TableQuery()
+    .where('PartitionKey eq ? && RowKey eq ?', userId, id)
+  const [res] = await queryTable(tbl, 'albums', query)
+  return res
 }
 
 export const postAlbums = async (tbl, userId, { name }) => {
