@@ -1,12 +1,11 @@
 import core from '@idio/core'
 import facebook from '@idio/facebook'
 import webhook from './webhook'
-import { getPhotos } from '../lib'
 import temp from './temp'
 import uploadPost from '../routes/post/upload'
 import { ExiftoolProcess } from 'node-exiftool'
 import exiftoolBin from 'dist-exiftool'
-import { partitions, getCSS } from 'photo-partition'
+import getPhotos from '../routes/get/photos'
 
 async function startExiftool() {
   const ep = new ExiftoolProcess(exiftoolBin)
@@ -84,53 +83,7 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
     ctx.session = null
     ctx.redirect('/')
   })
-  router.get('/photos/:user/:page*', async (ctx) => {
-    if (!ctx.params.user) throw new Error('no user')
-    const page = ctx.params.page ? parseInt(ctx.params.page) : 0
-    const { entries } = await getPhotos(ctx.params.user, page)
-    const newList = entries.map((r) => {
-      const aspect = r.ImageWidth._ / r.ImageHeight._
-      return {
-        width: r.ImageWidth._,
-        height: r.ImageHeight._,
-        aspect,
-        url: r.ThumbUrl._,
-      }
-    })
-    const pp = partitions({
-      1200: 1140,
-      992: 940,
-      768: 720,
-    }, newList, 250)
-    const outputList = newList
-      .map((photo, index) => ({
-        url: photo.url,
-        class: `s${index}`,
-      }))
-    const css = getCSS(pp)
-    const data = `<style>
-img.preview {
-  max-width: 100%;
-  max-height: 100%;
-}
-div.preview-div {
-  display: inline-block;
-}
-.Container {
-  text-align: center;
-}
-${css}
-</style>
-<div class="Container">
-${outputList.map(({ class: cl, url }) => `  <div class="preview-div ${cl}"><img class="preview" src="${url}"/></div>` ).join('')}
-</div>
-`
-    ctx.body = temp({
-      data,
-      title: 'User Photos',
-      user: ctx.session.user,
-    })
-  })
+  router.get('/photos/:user/:page*', getPhotos)
   facebook(router, {
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.SECRET,

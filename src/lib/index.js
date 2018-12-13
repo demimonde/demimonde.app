@@ -51,7 +51,9 @@ export const file = async ({
   return res
 }
 
-export const createRecord = async (table, partition, data, key = uuid()) => {
+export const createRecord = async (
+  table, partition, data, key = uuid(),
+) => {
   const tbl = createTableService()
   const photo = {
     PartitionKey: { _: partition },

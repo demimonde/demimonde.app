@@ -51,7 +51,9 @@ const getUrl = (storage, container, blob) => {
   return res
 }
 
-       const createRecord = async (table, partition, data, key = uuid()) => {
+       const createRecord = async (
+  table, partition, data, key = uuid(),
+) => {
   const tbl = createTableService()
   const photo = {
     PartitionKey: { _: partition },
