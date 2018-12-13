@@ -3,9 +3,9 @@ const { getPhotos } = require('../../lib');
 const temp = require('../../bin/temp');
 
 async function getPhotosRoute(ctx) {
-  if (!ctx.params.user) throw new Error('no user')
-  const page = ctx.params.page ? parseInt(ctx.params.page) : 0
-  const { entries } = await getPhotos(ctx.params.user, page)
+  const { id } = ctx.session.user
+  const page = ctx.params.page ? parseInt(ctx.params.page) : 1
+  const entries = await getPhotos(ctx.tableService, id, page)
   const newList = entries.map((r) => {
     const aspect = r.ImageWidth._ / r.ImageHeight._
     return {

@@ -1,5 +1,6 @@
 const { createBlobService, createTableService, TableQuery } = require('azure-storage');
 let uuid = require('uuid/v4'); if (uuid && uuid.__esModule) uuid = uuid.default;
+const { queryTable, ensureTable, insert } = require('./query');
 
 const getUrl = (storage, container, blob) => {
   return [
@@ -52,47 +53,84 @@ const getUrl = (storage, container, blob) => {
 }
 
        const createRecord = async (
-  table, partition, data, key = uuid(),
+  {
+    table,
+    partition,
+    data,
+    key = uuid(),
+    tbl = createTableService(),
+  }
 ) => {
-  const tbl = createTableService()
-  const photo = {
+  const allData = {
     PartitionKey: { _: partition },
     RowKey: { _: key },
     ...data,
   }
-  await new Promise((r, j) => {
-    tbl.createTableIfNotExists(table, function(error, result) {
-      if(!error) {
-        r(result)
-      } else j(error)
-    })
-  })
-  await new Promise((r, j) => {
-    tbl.insertEntity(table, photo, function (error, result, rr) {
-      if(!error){
-        r(rr)
-      } else j(error)
-    })
-  })
+  await ensureTable(tbl, table)
+  await insert(tbl, table, allData)
+  return key
 }
 
-       const getPhotos = async (userId, page = 1) => {
-  const tbl = createTableService()
-  var query = new TableQuery()
+       const getPhotos = async (tbl, userId, page = 1) => {
+  const query = new TableQuery()
     .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
-    .top(20 * page)
+    .top(20 * (page - 1))
     .where('PartitionKey eq ?', userId)
-  const res = await new Promise((r, j) => {
-    tbl.queryEntities('photos', query, null, (error, result) => {
-      if(!error) {
-        r(result)
-      } else j(error)
-    })
+  const entries = await queryTable(tbl, 'photos', query)
+  return entries
+}
+
+       const getAlbumPhotos = async (tbl, album, userId, page = 1) => {
+  const query = new TableQuery()
+    .select(['ImageUrl', 'ThumbUrl', 'ImageWidth', 'ImageHeight'])
+    .top(20 * (page - 1))
+    .where('AlbumId eq ? && PartitionKey eq ?', album, userId)
+  const entries = await queryTable(tbl, 'photos', query)
+  return entries
+}
+
+       const getAlbums = async (tbl, userId) => {
+  const query = new TableQuery()
+    .where('PartitionKey eq ?', userId)
+  return await queryTable(tbl, 'albums', query)
+}
+
+       const queryAlbum = async (tbl, userId, id) => {
+  const query = new TableQuery()
+    .where('PartitionKey eq ? && RowKey eq ?', userId, id)
+  const [res] = await queryTable(tbl, 'albums', query)
+  return res
+}
+
+       const postAlbums = async (tbl, userId, { name }) => {
+  if (!name) throw new Error('no name')
+  const res = await createRecord({
+    table: 'albums',
+    partition: userId,
+    tbl,
+    data: {
+      Name: { _: name },
+    },
   })
   return res
 }
+
+// export const query = async ({
+//   tableService = createTableService(),
+//   fields = [],
+//   partitionKey,
+// }) => {
+//   /** @type {} */
+//   const query = new TableQuery()
+//     .select(fields)
+//     .where('PartitionKey eq ?', partitionKey)
+// }
 
 module.exports.uploadFile = uploadFile
 module.exports.file = file
 module.exports.createRecord = createRecord
 module.exports.getPhotos = getPhotos
+module.exports.getAlbumPhotos = getAlbumPhotos
+module.exports.getAlbums = getAlbums
+module.exports.queryAlbum = queryAlbum
+module.exports.postAlbums = postAlbums

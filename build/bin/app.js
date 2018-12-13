@@ -6,6 +6,12 @@ const uploadPost = require('../routes/post/upload');
 const { ExiftoolProcess } = require('node-exiftool');
 let exiftoolBin = require('dist-exiftool'); if (exiftoolBin && exiftoolBin.__esModule) exiftoolBin = exiftoolBin.default;
 const getPhotos = require('../routes/get/photos');
+const getUploadRoute = require('../routes/get/upload');
+const { createTableService } = require('azure-storage');
+const getAlbums = require('../routes/get/albums');
+const getAlbum = require('../routes/get/album');
+const getAddAlbum = require('../routes/get/add-album');
+const postAddAlbum = require('../routes/post/add-album');
 
 async function startExiftool() {
   const ep = new ExiftoolProcess(exiftoolBin)
@@ -25,7 +31,7 @@ const getHello = (user) => {
 }
 
 (async () => {
-  const { app, router, url, middleware: { bodyparser, multer, csrf } } = await core({
+  const { app, router, url, middleware: { bodyparser, multer, csrf, checkauth } } = await core({
     session: { use: true, keys: [process.env.SESSION_KEY || 'dev'] },
     logger: { use: process.env != 'production' },
     bodyparser: {},
@@ -33,10 +39,12 @@ const getHello = (user) => {
     multer: { config: {
       dest: 'upload',
     } },
+    checkauth: {},
     csrf: {},
   }, { port: process.env.PORT || 5000 })
   const ep = await startExiftool()
   app.context.exiftool = ep
+  app.context.tableService = createTableService()
   app.context.storage = process.env.STORAGE
   app.context.container = process.env.CONTAINER
   router.get('/', async (ctx) => {
@@ -46,8 +54,9 @@ const getHello = (user) => {
 Demimonde allows to publish images online.
 </p>
   <ul>
-${user ? '<li><a href="/upload">Upload</a></li>' : ''}
-${user ? `<li><a href="/photos/${user.id}">My Photos</a></li>` : ''}
+${user ? '<li><a href="/upload">Upload New</a></li>' : ''}
+${user ? '<li><a href="/photos">My Photos</a></li>' : ''}
+${user ? '<li><a href="/albums">Photo Albums</a></li>' : ''}
   <li><a href="/privacy">Privacy Policy</a></li>
 ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
   </ul>
@@ -57,24 +66,19 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
     ctx.body = t
   })
   webhook(router, bodyparser)
-  router.get('/privacy', async (ctx, next) => {
-    ctx.body = 'Privacy Policy'
+  router.get('/privacy', async (ctx) => {
+    ctx.body = temp({
+      data: '<h1>Privacy Policy</h1>',
+      title: 'Privacy Policy',
+      user: ctx.session.user,
+    })
   })
-  router.get('/upload', checkToken, csrf, async (ctx) => {
-    const user = ctx.session.user
-    // action="http://localhost:7071/api/HttpTrigger"
-    const data = `
-<form method="post" enctype="multipart/form-data">
-    <input type="hidden" name="_csrf" value="${ctx.csrf}">
-    <input type="text" name="caption" placeholder="caption">
-    <input type="file" name="file" required>
-    <input name="id" value="${ctx.session.user.id}" type="hidden">
-    <input type="submit">
-</form>`
-    ctx.body = temp({ data, title: 'Upload', user })
-    // fetch /
-  })
-  router.post('/upload', checkToken, multer.single('file'), async (ctx, next) => {
+  router.get('/add-album', checkauth, csrf, getAddAlbum)
+  router.post('/add-album', checkauth, bodyparser, csrf, postAddAlbum)
+  router.get('/album/:albumId', checkauth, csrf, getAlbum)
+  router.get('/albums', checkauth, csrf, getAlbums)
+  router.get('/upload', checkauth, csrf, getUploadRoute)
+  router.post('/upload', checkauth, multer.single('file'), async (ctx, next) => {
     ctx.request.body = ctx.request.body || {}
     ctx.request.body._csrf = ctx.req.body._csrf
     await next()
@@ -83,7 +87,16 @@ ${user ? '<li><a href="/signout">Sign Out</a></li>' : ''}
     ctx.session = null
     ctx.redirect('/')
   })
-  router.get('/photos/:user/:page*', getPhotos)
+  router.get('/photos/:page*', async (ctx, next) => {
+    if (!ctx.session.user) {
+      ctx.body = temp({
+        data: 'Please sign in to see your photos',
+        title: 'Please sign in',
+      })
+      return
+    }
+    await next()
+  }, getPhotos)
   facebook(router, {
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.SECRET,

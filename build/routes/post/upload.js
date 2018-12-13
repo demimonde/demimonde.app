@@ -1,17 +1,21 @@
 let rm = require('@wrote/rm'); if (rm && rm.__esModule) rm = rm.default;
 let uuid = require('uuid'); if (uuid && uuid.__esModule) uuid = uuid.default;
 let sharp = require('sharp'); if (sharp && sharp.__esModule) sharp = sharp.default;
-const { uploadFile, createRecord, file } = require('../../lib');
+const { uploadFile, createRecord, file, queryAlbum } = require('../../lib');
 const { ExiftoolProcess } = require('node-exiftool');
 
 module.exports=async (ctx) => {
   /** @type {ExiftoolProcess} */
   const exiftool = ctx.exiftool
   const { storage, container } = ctx
+  const { id } = ctx.session.user
   if (!storage) throw new Error('Set STORAGE env variable.')
   if (!container) throw new Error('Set CONTAINER env variable.')
-  const { id } = ctx.req.body
-  if (!id) throw new Error('No user id.')
+  const { album } = ctx.req.body
+  if (!album) throw new Error('No album')
+  const alb = await queryAlbum(ctx.tableService, id, album)
+  if (!alb) throw new Error('Album not found')
+
   if (!ctx.req.file) throw new Error('No file')
   const { path, mimetype } = ctx.req.file
   const { data: [metadata] } = await exiftool.readMetadata(path, ['n'])
@@ -36,13 +40,20 @@ module.exports=async (ctx) => {
   ])
   await rm(path)
   const { Orientation = 1 } = metadata
-  await createRecord('photos', id, {
-    ImageUrl: { _: imageUrl },
-    ThumbUrl: { _: thumbUrl },
-    ImageWidth: { _: Orientation < 5 ? metadata.ImageWidth : metadata.ImageHeight },
-    ImageHeight: { _: Orientation < 5 ? metadata.ImageHeight : metadata.ImageWidth },
-  }, pad())
-  ctx.body = thumbUrl
+  const photoId = await createRecord({
+    table: 'photos',
+    data: {
+      ImageUrl: { _: imageUrl },
+      ThumbUrl: { _: thumbUrl },
+      AlbumId: { _: album },
+      ImageWidth: { _: Orientation < 5 ? metadata.ImageWidth : metadata.ImageHeight },
+      ImageHeight: { _: Orientation < 5 ? metadata.ImageHeight : metadata.ImageWidth },
+    },
+    key: pad(),
+    partition: id,
+    tbl: ctx.tableService,
+  })
+  ctx.body = { photoId, thumbUrl }
 }
 
 const pad = () => {
