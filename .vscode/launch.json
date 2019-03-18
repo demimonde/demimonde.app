@@ -20,7 +20,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch App",
+      "name": "Launch Server",
       "program": "${workspaceFolder}/src/bin/index.js",
       "console": "integratedTerminal",
       "skipFiles": [
