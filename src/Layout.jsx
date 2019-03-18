@@ -8,7 +8,7 @@ const Hello = ({ user }) => {
   </span>
 }
 
-const Html = ({ title = 'Demimonde', App, user, script }) => (<html>
+const Html = ({ title = 'Demimonde', App, user, script, style }) => (<html>
   <head lang="ru">
     <title>{title}</title>
     <meta charset="utf-8"/>
@@ -19,6 +19,7 @@ const Html = ({ title = 'Demimonde', App, user, script }) => (<html>
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/>
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png"/>
     <link rel="manifest" href="/site.webmanifest"/>
+    {style && <style dangerouslySetInnerHTML={{ __html: style }}/>}
   </head>
   <body>
     <a href="/" style="display:block;">
@@ -42,9 +43,9 @@ const Links = ({ user }) => {
   </span>
 }
 
-const Layout = ({ App, title, user, script }) => {
+const Layout = ({ App, title, user, script, style }) => {
   return render(<Html App={App}
-    title={title} user={user} script={script} />, {
+    title={title} user={user} script={script} style={style} />, {
     addDoctype: true,
   })
 }

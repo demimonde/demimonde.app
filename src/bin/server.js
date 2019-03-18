@@ -27,7 +27,7 @@ export default async (opts) => {
   } = opts
   const { app, router, url, middleware } = await core({
     session: { use: true, keys: [process.env.SESSION_KEY || 'dev'] },
-    logger: { use: process.env != 'production' },
+    // logger: { use: process.env != 'production' },
     bodyparser: {},
     static: { use: true, root: 'static', maxage },
     multer: { config: {
@@ -36,7 +36,6 @@ export default async (opts) => {
     checkauth: {},
     // csrf: {},
   }, { port })
-  // app.context.tableService = createTableService()
   // app.context.storage = process.env.STORAGE
   // app.context.container = process.env.CONTAINER
 

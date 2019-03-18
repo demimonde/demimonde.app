@@ -3,6 +3,7 @@ import exiftoolBin from 'dist-exiftool'
 import { c, b } from 'erte'
 // import { createTableService } from 'azure-storage'
 import Server from './server'
+import { createTableService } from 'azure-storage';
 
 async function startExiftool() {
   const ep = new ExiftoolProcess(exiftoolBin)
@@ -37,7 +38,9 @@ async function startExiftool() {
 
   const { ep, pid } = await startExiftool()
   console.log('Opened %s %s', c(b('exiftool', 'yellow'), 'red'), pid)
-  addContext({ exiftool: ep })
+
+  const tableService = createTableService()
+  addContext({ exiftool: ep, tableService })
 
   // OK LETS GO
 
