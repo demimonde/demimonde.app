@@ -96,6 +96,7 @@ export const getAlbums = async (tbl, userId) => {
 }
 
 export const queryAlbum = async (tbl, userId, id) => {
+  if (!id) return
   const query = new TableQuery()
     .where('PartitionKey eq ? && RowKey eq ?', userId, id)
   const [res] = await queryTable(tbl, 'albums', query)
