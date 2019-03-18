@@ -20,6 +20,7 @@ export default async (ctx) => {
   const app = (<App activeMenu="index" user={user}/>)
   ctx.body = Layout({
     App: app,
+    user,
   })
 }
 

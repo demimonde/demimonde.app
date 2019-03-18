@@ -84,7 +84,7 @@ export default async (opts) => {
   app.use(router.routes())
   // console.log('Started on %s', url)
   return {
-    app, url,  addContext(item) {
+    app, url, addContext(item) {
       console.log('> Adding App Context %s', Object.keys(item).join(' '))
       Object.assign(app.context, item)
     },
