@@ -1,6 +1,9 @@
 import core from '@idio/core'
 import facebook from '@idio/facebook'
 import initRoutes, { watchRoutes } from '@idio/router'
+import { v4 } from 'uuid'
+import Layout from '../Layout';
+
 // import webhook from './webhook'
 // import uploadPost from '../routes/post/upload'
 // import getUploadRoute from '../routes/get/upload'
@@ -26,7 +29,9 @@ export default async (opts) => {
     // cdn, frontendUrl, exiftool, elastic,
   } = opts
   const { app, router, url, middleware } = await core({
-    session: { use: true, keys: [process.env.SESSION_KEY || 'dev'] },
+    session: {
+      use: true, keys: [process.env.SESSION_KEY || 'dev'],
+    },
     // logger: { use: process.env != 'production' },
     bodyparser: {},
     static: { use: true, root: 'static', maxage },
@@ -62,10 +67,6 @@ export default async (opts) => {
   //   ctx.request.body._csrf = ctx.req.body._csrf
   //   await next()
   // }, csrf, uploadPost)
-  // router.get('/signout', async (ctx) => {
-  //   ctx.session = null
-  //   ctx.redirect('/')
-  // })
   // router.get('/photos/:page*', async (ctx, next) => {
   //   if (!ctx.session.user) {
   //     ctx.body = temp({
@@ -79,9 +80,22 @@ export default async (opts) => {
   facebook(router, {
     client_id,
     client_secret,
+    finish(ctx, token, user) {
+      ctx.session.token = token
+      ctx.session.user = user
+      ctx.session.csrf = v4()
+      ctx.redirect('/')
+    },
   })
   app.use(router.routes())
   // console.log('Started on %s', url)
+  app.context.Layout = ({ session = {}, App, script, style, title }) => {
+    return Layout({
+      user: session.user,
+      csrf: session.csrf,
+      App, script, style, title,
+    })
+  }
   return {
     app, url, addContext(item) {
       console.log('> Adding App Context %s', Object.keys(item).join(' '))

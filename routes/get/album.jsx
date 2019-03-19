@@ -1,6 +1,3 @@
-// import { partitions, getCSS } from 'photo-partition'
-// import temp from '../../bin/temp'
-import Layout from '../../src/Layout'
 import photos from '../../src/lib/photos'
 import { queryAlbum, getAlbumPhotos } from '../../src/lib'
 
@@ -18,10 +15,10 @@ export default async (ctx) => {
   const album = await queryAlbum(ctx.tableService, id, albumId)
   if (!album) {
     ctx.status = 404
-    ctx.body = Layout({
+    ctx.body = ctx.Layout({
       App: <h1>Album Not Found</h1>,
       title: 404,
-      user: ctx.session.user,
+      session: ctx.session,
     })
     return
   }
@@ -31,10 +28,10 @@ export default async (ctx) => {
   const entries = await getAlbumPhotos(ctx.tableService, albumId, id, page)
   const { Container, style } = photos(entries)
 
-  ctx.body = Layout({
+  ctx.body = ctx.Layout({
     App: <Page album={album} inner={Container} />,
     title: `Album ${album.Name._}`,
-    user: ctx.session.user,
+    session: ctx.session,
     style,
   })
 }

@@ -1,5 +1,4 @@
 import { getAlbums } from '../../src/lib'
-import Layout from '../../src/Layout'
 
 const Page = ({ albums }) => {
   return (<div>
@@ -19,9 +18,9 @@ const Page = ({ albums }) => {
 export default async (ctx) => {
   const user = ctx.session.user
   const albums = await getAlbums(ctx.tableService, user.id)
-  ctx.body = Layout({
+  ctx.body = ctx.Layout({
     App: <Page albums={albums} />,
     title: 'Albums',
-    user,
+    session: ctx.session,
   })
 }

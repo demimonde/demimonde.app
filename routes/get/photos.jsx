@@ -1,6 +1,5 @@
 import { getPhotos } from '../../src/lib'
 import photos from '../../src/lib/photos'
-import Layout from '../../src/Layout'
 
 export default async (ctx) => {
   const { id } = ctx.session.user
@@ -9,10 +8,10 @@ export default async (ctx) => {
 
   const { style, Container } = photos(entries)
 
-  ctx.body = Layout({
+  ctx.body = ctx.Layout({
     App: Container,
     title: 'User Photos',
-    user: ctx.session.user,
     style,
+    session: ctx.session,
   })
 }

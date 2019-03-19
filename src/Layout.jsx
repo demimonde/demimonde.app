@@ -8,7 +8,7 @@ const Hello = ({ user }) => {
   </span>
 }
 
-const Html = ({ title = 'Demimonde', App, user, script, style }) => (<html>
+const Html = ({ title = 'Demimonde', App, user, script, style, csrf }) => (<html>
   <head lang="ru">
     <title>{title}</title>
     <meta charset="utf-8"/>
@@ -26,26 +26,28 @@ const Html = ({ title = 'Demimonde', App, user, script, style }) => (<html>
       <img src="/logo.svg" style="width:350px;"/>
     </a>
     <Hello user={user} />
-    <Links user={user} />
+    <Links user={user} csrf={csrf} />
     {App}
     {script && <script dangerouslySetInnerHTML={{ __html: `(function ${script.toString()})()` }}>
     </script>}
   </body>
 </html>)
 
-const Links = ({ user }) => {
+const Links = ({ user, csrf }) => {
   if (!user) return (<a href="/auth/facebook">
     <img src="/fb.png"/>
   </a>)
   return <span>
-    {' '}<a href="/signout">Sign out</a>{' '}
+    {' '}<a href={`/signout?token=${csrf}`}>Sign out</a>{' '}
     <a href="/upload">Upload</a>
   </span>
 }
 
-const Layout = ({ App, title, user, script, style }) => {
+const Layout = ({
+  App, title, user, script, style, csrf,
+}) => {
   return render(<Html App={App}
-    title={title} user={user} script={script} style={style} />, {
+    title={title} user={user} script={script} style={style} csrf={csrf} />, {
     addDoctype: true,
   })
 }

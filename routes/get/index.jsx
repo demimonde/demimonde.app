@@ -1,5 +1,3 @@
-import Layout from '../../src/Layout'
-
 const App = ({ user }) => {
   return (<div>
     <p>
@@ -18,9 +16,9 @@ const App = ({ user }) => {
 export default async (ctx) => {
   const user = ctx.session.user
   const app = (<App activeMenu="index" user={user}/>)
-  ctx.body = Layout({
+  ctx.body = ctx.Layout({
     App: app,
-    user,
+    session: ctx.session,
   })
 }
 

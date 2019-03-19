@@ -1,9 +1,8 @@
 import { ExiftoolProcess } from 'node-exiftool'
 import exiftoolBin from 'dist-exiftool'
 import { c, b } from 'erte'
-// import { createTableService } from 'azure-storage'
 import Server from './server'
-import { createTableService } from 'azure-storage';
+import { createTableService } from 'azure-storage'
 
 async function startExiftool() {
   const ep = new ExiftoolProcess(exiftoolBin)
