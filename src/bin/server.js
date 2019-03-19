@@ -1,8 +1,7 @@
 import core from '@idio/core'
 import facebook from '@idio/facebook'
 import initRoutes, { watchRoutes } from '@idio/router'
-import { v4 } from 'uuid'
-import Layout from '../Layout';
+import Layout from '../Layout'
 
 // import webhook from './webhook'
 // import uploadPost from '../routes/post/upload'
@@ -80,19 +79,13 @@ export default async (opts) => {
   facebook(router, {
     client_id,
     client_secret,
-    finish(ctx, token, user) {
-      ctx.session.token = token
-      ctx.session.user = user
-      ctx.session.csrf = v4()
-      ctx.redirect('/')
-    },
   })
   app.use(router.routes())
   // console.log('Started on %s', url)
   app.context.Layout = ({ session = {}, App, script, style, title }) => {
     return Layout({
       user: session.user,
-      csrf: session.csrf,
+      csrf: session.token,
       App, script, style, title,
     })
   }
