@@ -6,7 +6,7 @@ COPY package*.json .
 COPY yarn.lock .
 RUN yarn
 
-COPY static static
+COPY . .
 
 ENV NODE_ENV production
 
